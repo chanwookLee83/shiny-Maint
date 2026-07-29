@@ -483,6 +483,8 @@ body.light input[type="datetime-local"]::-webkit-calendar-picker-indicator{filte
 .mchip.r{border-color:#ef444428;color:var(--red);}
 .mchip.a{border-color:#f59e0b28;color:var(--amber);}
 .mchip.b{border-color:#3b82f628;color:var(--blue);}
+.mchip.p{border-color:#8b5cf628;color:var(--purple);}
+.mchip.c{border-color:#06b6d428;color:#06b6d4;}
 .mlog-parts{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:9px;margin-top:7px;}
 .mlog-parts-title{font-family:var(--cond);font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:7px;font-weight:700;}
 .mlog-part-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:13px;}
@@ -1085,6 +1087,8 @@ body.light .ac-item.ac-active{background:#f3f4f6;color:var(--amber);}
             <option value="프로그램">프로그램 수정</option>
             <option value="기구부">기구부 수정</option>
             <option value="개선">개선 수정</option>
+            <option value="청소">청소</option>
+            <option value="작업자교육">작업자교육</option>
             <option value="대기">정비대기</option>
           </select></div>
         </div>
@@ -1156,6 +1160,8 @@ body.light .ac-item.ac-active{background:#f3f4f6;color:var(--amber);}
       <button class="filter-chip" data-val="프로그램" onclick="setMTypeFilter('프로그램')">프로그램</button>
       <button class="filter-chip" data-val="기구부" onclick="setMTypeFilter('기구부')">기구부</button>
       <button class="filter-chip" data-val="개선" onclick="setMTypeFilter('개선')">개선</button>
+      <button class="filter-chip" data-val="청소" onclick="setMTypeFilter('청소')">청소</button>
+      <button class="filter-chip" data-val="작업자교육" onclick="setMTypeFilter('작업자교육')">작업자교육</button>
       <button class="filter-chip" data-val="대기" onclick="setMTypeFilter('대기')">정비대기</button>
     </div>
     <!-- 날짜 필터 -->
@@ -2065,6 +2071,8 @@ body.light .ac-item.ac-active{background:#f3f4f6;color:var(--amber);}
           <option value="프로그램">프로그램 수정</option>
           <option value="기구부">기구부 수정</option>
           <option value="개선">개선 수정</option>
+          <option value="청소">청소</option>
+          <option value="작업자교육">작업자교육</option>
           <option value="대기">정비대기</option>
         </select></div>
       </div>
@@ -3174,7 +3182,7 @@ function renderMaintLog(){
     const isOpen=yi===0;
     const items=byYear[year].map(m=>{
       const realIdx=db.maints.indexOf(m);
-      const typeColor={'고장':'r','프로그램':'b','기구부':'a','개선':'g'}[m.type]||'';
+      const typeColor={'고장':'r','프로그램':'b','기구부':'a','개선':'g','청소':'p','작업자교육':'c'}[m.type]||'';
       const rd=m.start?m.start.slice(0,10):null;
       return `
       <div class="mlog-item">
@@ -3873,8 +3881,8 @@ function drawTypeChart(filteredMaints){
   const strokeCol=isLight?'#f0f4f8':'#0a0c0f';
   const countCol=isLight?'#c47f00':'#ffcb2b';
   const maints=filteredMaints||db.maints;
-  const types=['고장','프로그램','기구부','개선','대기'];
-  const COLS=['#ef4444','#3b82f6','#f59e0b','#10b981','#8b8b9c'];
+  const types=['고장','프로그램','기구부','개선','청소','작업자교육','대기'];
+  const COLS=['#ef4444','#3b82f6','#f59e0b','#10b981','#8b5cf6','#06b6d4','#8b8b9c'];
   const counts=types.map(t=>maints.filter(m=>m.type===t).length);
   const total=counts.reduce((a,b)=>a+b,0);
   if(!total){ctx.fillStyle=mutedCol;ctx.textAlign='center';ctx.font='14px monospace';ctx.fillText('데이터 없음',W/2,H/2);return;}
