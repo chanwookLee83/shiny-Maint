@@ -309,7 +309,7 @@ body{font-family:var(--sans);color:var(--text);display:flex;flex-direction:colum
 .tr{display:flex;align-items:center;gap:6px;}
 .alarm-btn{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--muted2);font-size:17px;padding:6px 9px;cursor:pointer;position:relative;flex-shrink:0;transition:border-color .2s,color .2s;}
 .alarm-btn:hover{border-color:var(--amber);color:var(--amber);}
-.alarm-badge{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:none;align-items:center;justify-content:center;font-family:var(--mono);padding:0 3px;line-height:1;}
+.alarm-badge{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;background:var(--red);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:none;align-items:center;justify-content:center;font-family:var(--mono);padding:0 3px;line-height:1;box-shadow:0 1px 3px rgba(0,0,0,.35);}
 .alarm-badge.show{display:flex;}
 .topbar-date{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap;}
 .theme-btn{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--muted2);font-size:16px;padding:6px 9px;cursor:pointer;transition:all .2s;}
@@ -472,6 +472,12 @@ body.light input[type="datetime-local"]::-webkit-calendar-picker-indicator{filte
 .mlog-date{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--muted);margin-top:1px;}
 .mlog-content{font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.6;}
 .mlog-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;}
+
+/* INSPECTION LOG */
+.insp-log-name{font-size:14px;font-weight:600;}
+.insp-log-date{font-family:var(--mono);font-size:13px;color:var(--muted);}
+.insp-log-next{font-family:var(--mono);font-size:13px;margin-top:3px;}
+.insp-log-chip{font-family:var(--mono);font-size:13px;font-weight:700;border-radius:4px;padding:3px 8px;}
 .mchip{display:inline-flex;align-items:center;background:var(--card2);border:1px solid var(--border2);border-radius:5px;padding:3px 8px;font-family:var(--mono);font-size:11px;color:var(--muted2);}
 .mchip.g{border-color:#10b98128;color:var(--green);}
 .mchip.r{border-color:#ef444428;color:var(--red);}
@@ -844,6 +850,10 @@ body.light .sec-title::after{background:#d4d9e2;}
   .grade-badge{width:30px;height:30px;font-size:16px;}
   .mlog-eq{font-size:19px;}
   .mlog-date{font-size:15px;}
+  .insp-log-name{font-size:18px;}
+  .insp-log-date{font-size:16px;}
+  .insp-log-next{font-size:16px;}
+  .insp-log-chip{font-size:16px;padding:5px 11px;}
   .mlog-content{font-size:15px;}
   .mchip{font-size:13px;padding:4px 11px;}
   .mlog-parts-title{font-size:14px;letter-spacing:3px;margin-bottom:8px;}
@@ -3988,17 +3998,17 @@ function renderInspLog(){
         <span style="font-size:18px;">${d.verdict==='OK'?'✅':d.verdict==='NG'?'❌':ngCount>0?'⚠️':'🔧'}</span>
         <div style="flex:1;">
           <div style="display:flex;align-items:center;gap:7px;">
-            <div style="font-size:13px;font-weight:600;">${d.eqName}</div>
+            <div class="insp-log-name">${d.eqName}</div>
             ${d.verdict?`<span style="font-family:var(--cond);font-size:11px;font-weight:900;letter-spacing:2px;padding:2px 8px;border-radius:5px;${d.verdict==='OK'?'background:#10b98120;border:1px solid #10b98145;color:var(--green);':'background:#ef444420;border:1px solid #ef444445;color:var(--red);'}">${d.verdict}</span>`:''}
           </div>
-          <div style="font-family:var(--mono);font-size:12px;color:var(--muted);">📅 ${d.date}${d.worker?' | 👤 '+d.worker:''}</div>
-          <div style="font-family:var(--mono);font-size:12px;margin-top:3px;color:${nextColor};">▶ 차기 점검: ${nextDateStr} (${daysToNext>=0?'D-'+daysToNext:'D+'+Math.abs(daysToNext)})</div>
+          <div class="insp-log-date">📅 ${d.date}${d.worker?' | 👤 '+d.worker:''}</div>
+          <div class="insp-log-next" style="color:${nextColor};">▶ 차기 점검: ${nextDateStr} (${daysToNext>=0?'D-'+daysToNext:'D+'+Math.abs(daysToNext)})</div>
           ${hasChk?`<div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;">
             ${Object.entries(d.chk).map(([cat,vals])=>{
               const ok=Object.values(vals).filter(v=>v==='ok').length;
               const ng=Object.values(vals).filter(v=>v==='ng').length;
               const total=8;
-              return `<span style="font-family:var(--mono);font-size:12px;font-weight:700;background:${catColors[cat]}18;border:1px solid ${catColors[cat]}30;border-radius:4px;padding:3px 8px;color:${catColors[cat]};">${catNames[cat]} ${ok} OK${ng>0?' / '+ng+' NG':''}</span>`;
+              return `<span class="insp-log-chip" style="background:${catColors[cat]}18;border:1px solid ${catColors[cat]}30;color:${catColors[cat]};">${catNames[cat]} ${ok} OK${ng>0?' / '+ng+' NG':''}</span>`;
             }).join('')}
           </div>`:''}
           ${ngCount>0?`<div style="font-size:11px;color:var(--red);margin-top:4px;">⚠ NG: ${d.ngList.join(', ')}</div>`:''}
