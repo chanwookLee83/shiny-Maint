@@ -2553,10 +2553,13 @@ function toggleTheme(){
     });
   }
 })();
+function sortedEqs(){
+  return [...db.eqs].sort((a,b)=>(a.name||'').localeCompare(b.name||'','ko'));
+}
 function getAcSources(){
   const uniq=arr=>[...new Set(arr.filter(Boolean))];
   return {
-    eqNames:   uniq(db.eqs.map(e=>e.name)),
+    eqNames:   uniq(db.eqs.map(e=>e.name)).sort((a,b)=>a.localeCompare(b,'ko')),
     eqSerials: uniq(db.eqs.map(e=>e.serial)),
     makers:    uniq([...db.eqs.map(e=>e.maker),...db.parts.map(p=>p.maker),...db.boms.map(b=>b.maker)]),
     locs:      uniq(db.eqs.map(e=>e.loc)),
@@ -2648,8 +2651,8 @@ function eqAcShow(){
   const q=inp.value.trim().toLowerCase();
   acCloseAll('mEqInput');
   const matched=q
-    ? db.eqs.filter(eq=>eq.name.toLowerCase().includes(q)||(eq.loc||'').toLowerCase().includes(q))
-    : db.eqs.slice(0,20);
+    ? sortedEqs().filter(eq=>eq.name.toLowerCase().includes(q)||(eq.loc||'').toLowerCase().includes(q))
+    : sortedEqs().slice(0,20);
   if(!matched.length){list.classList.remove('open');return;}
   list.innerHTML=matched.slice(0,20).map(eq=>{
     const nameSafe=eq.name.replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -2735,6 +2738,7 @@ function renderEqList(){
            (eq.maker||'').toLowerCase().includes(q)||
            (eq.power||'').toLowerCase().includes(q);
   });
+  filtered.sort((a,b)=>(a.name||'').localeCompare(b.name||'','ko'));
   if(cntEl) cntEl.innerHTML = (q||eqStatusFilter!=='ALL') ? `검색결과 <span>${filtered.length}</span> / ${db.eqs.length}건` : `전체 <span>${db.eqs.length}</span>건`;
   if(!filtered.length){el.innerHTML='<div class="empty"><span class="empty-icon">🔍</span>"'+q+'" 검색 결과 없음</div>';return;}
   el.innerHTML=filtered.map((eq,fi)=>{
@@ -2941,7 +2945,7 @@ function populateEqSelects(){
     const el=document.getElementById(id);if(!el)return;
     const cur=el.value;
     el.innerHTML='<option value="">-- 장비 선택 --</option>'+
-      db.eqs.map(eq=>`<option value="${eq.id}">${eq.name}</option>`).join('');
+      sortedEqs().map(eq=>`<option value="${eq.id}">${eq.name}</option>`).join('');
     el.value=cur;
   });
   // mEq 자동완성: 장비 삭제 등으로 현재 선택값이 유효하지 않으면 초기화
@@ -3132,8 +3136,8 @@ function mFilterEqAcShow(){
   const q=inp.value.trim().toLowerCase();
   acCloseAll('mFilterEqInput');
   const matched=q
-    ? db.eqs.filter(eq=>eq.name.toLowerCase().includes(q)||(eq.loc||'').toLowerCase().includes(q))
-    : db.eqs.slice(0,20);
+    ? sortedEqs().filter(eq=>eq.name.toLowerCase().includes(q)||(eq.loc||'').toLowerCase().includes(q))
+    : sortedEqs().slice(0,20);
   if(!matched.length){list.classList.remove('open');return;}
   list.innerHTML=matched.slice(0,20).map(eq=>{
     const nm=eq.name.replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -3396,7 +3400,7 @@ function openMaintEdit(i){
   // 장비 셀렉트 채우기
   const sel = document.getElementById('eMEq');
   sel.innerHTML = '<option value="">-- 장비 선택 --</option>' +
-    db.eqs.map(eq=>`<option value="${eq.id}">${eq.name}</option>`).join('');
+    sortedEqs().map(eq=>`<option value="${eq.id}">${eq.name}</option>`).join('');
   sel.value = m.eqId;
   document.getElementById('eMType').value   = m.type;
   document.getElementById('eMWorker').value = m.worker||'';
@@ -4300,7 +4304,7 @@ function populateInspChkEq(){
   const prev=sel.value;
   const today=localToday();
   sel.innerHTML='<option value="">-- 장비 선택 --</option>';
-  db.eqs.forEach(eq=>{
+  sortedEqs().forEach(eq=>{
     // 오늘 이미 점검 완료한 장비 제외
     const todayDone=db.insps.some(d=>d.eqId===eq.id&&d.date===today);
     if(todayDone) return;
@@ -4387,7 +4391,7 @@ function populateBomEqSel(){
     if(!sel)return;
     const prev=sel.value;
     sel.innerHTML=id==='bomEqSel'?'<option value="">-- 장비 선택 --</option>':'<option value="">전체 장비</option>';
-    db.eqs.forEach(eq=>sel.innerHTML+=`<option value="${eq.id}">${eq.name}</option>`);
+    sortedEqs().forEach(eq=>sel.innerHTML+=`<option value="${eq.id}">${eq.name}</option>`);
     if(prev)sel.value=prev;
   });
 }
@@ -4516,7 +4520,7 @@ function openBomEdit(id){
   bomEditId=id;
   // 장비 드롭다운 채우기
   const sel=document.getElementById('eBomEq');
-  sel.innerHTML=db.eqs.map(e=>`<option value="${e.id}"${e.id===b.eqId?' selected':''}>${e.name}</option>`).join('');
+  sel.innerHTML=sortedEqs().map(e=>`<option value="${e.id}"${e.id===b.eqId?' selected':''}>${e.name}</option>`).join('');
   document.getElementById('eBomCat').value=b.cat||'구동부';
   document.getElementById('eBomName').value=b.name||'';
   document.getElementById('eBomPN').value=b.pn||'';
