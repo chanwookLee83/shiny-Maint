@@ -5570,8 +5570,8 @@ function reqEqAcShow() {
   const q = inp.value.trim().toLowerCase();
   acCloseAll('reqEqInput');
   const matched = q
-    ? db.eqs.filter(eq => eq.status !== '단종' && (eq.name.toLowerCase().includes(q) || (eq.loc||'').toLowerCase().includes(q)))
-    : db.eqs.filter(eq => eq.status !== '단종').slice(0, 20);
+    ? sortedEqs().filter(eq => eq.status !== '단종' && (eq.name.toLowerCase().includes(q) || (eq.loc||'').toLowerCase().includes(q)))
+    : sortedEqs().filter(eq => eq.status !== '단종').slice(0, 20);
   if (!matched.length) { list.classList.remove('open'); return; }
   list.innerHTML = matched.slice(0, 20).map(eq => {
     const nm      = eq.name.replace(/&/g,'&amp;').replace(/</g,'&lt;');
