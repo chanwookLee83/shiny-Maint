@@ -468,8 +468,8 @@ body.light input[type="datetime-local"]::-webkit-calendar-picker-indicator{filte
 .mlog-item{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:14px;margin-bottom:9px;}
 .mlog-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .mlog-head-left{flex:1;min-width:0;}
-.mlog-eq{font-family:var(--mono);font-size:12px;color:var(--amber);}
-.mlog-date{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:1px;}
+.mlog-eq{font-family:var(--mono);font-size:14px;color:var(--amber);}
+.mlog-date{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--muted);margin-top:1px;}
 .mlog-content{font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.6;}
 .mlog-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;}
 .mchip{display:inline-flex;align-items:center;background:var(--card2);border:1px solid var(--border2);border-radius:5px;padding:3px 8px;font-family:var(--mono);font-size:11px;color:var(--muted2);}
@@ -842,8 +842,8 @@ body.light .sec-title::after{background:#d4d9e2;}
   .eq-info-cell-val{font-size:15px;}
   .grade-btn{padding:14px 8px;font-size:18px;}
   .grade-badge{width:30px;height:30px;font-size:16px;}
-  .mlog-eq{font-size:17px;}
-  .mlog-date{font-size:13px;}
+  .mlog-eq{font-size:19px;}
+  .mlog-date{font-size:15px;}
   .mlog-content{font-size:15px;}
   .mchip{font-size:13px;padding:4px 11px;}
   .mlog-parts-title{font-size:14px;letter-spacing:3px;margin-bottom:8px;}
@@ -1445,7 +1445,7 @@ body.light .ac-item.ac-active{background:#f3f4f6;color:var(--amber);}
 
     <!-- 월별 통계 -->
     <div id="inspMonthStats" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:10px;">
-      <div style="font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:3px;color:var(--muted2);margin-bottom:8px;">📊 월별 통계</div>
+      <div style="font-family:var(--cond);font-size:16px;font-weight:700;letter-spacing:3px;color:var(--muted2);margin-bottom:8px;">📊 월별 통계</div>
       <div id="inspStatsContent"></div>
     </div>
 
@@ -3948,11 +3948,11 @@ function renderInspLog(){
     statsContent.innerHTML=Object.entries(byMonth).sort((a,b)=>b[0].localeCompare(a[0])).map(([m,s])=>{
       const active=curMonthFilter===m;
       return `<div onclick="inspMonthFilter('${m}')" style="display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:7px;transition:background .15s;${active?'background:var(--amber)18;outline:1px solid var(--amber)30;':''}">
-        <span style="font-family:var(--mono);font-weight:700;color:${active?'var(--amber)':'var(--text)'};min-width:76px;font-size:16px;">${m}</span>
-        <span style="font-family:var(--mono);color:var(--muted);font-size:15px;">총 ${s.total}건</span>
-        <span style="font-family:var(--mono);color:var(--green);font-size:15px;">✅ ${s.ok}</span>
-        <span style="font-family:var(--mono);color:var(--red);font-size:15px;">❌ ${s.ng}</span>
-        <span style="font-family:var(--mono);color:var(--muted);font-size:13px;margin-left:auto;">${s.eqs.size}개 장비</span>
+        <span style="font-family:var(--mono);font-weight:700;color:${active?'var(--amber)':'var(--text)'};min-width:80px;font-size:17px;">${m}</span>
+        <span style="font-family:var(--mono);color:var(--muted);font-size:16px;">총 ${s.total}건</span>
+        <span style="font-family:var(--mono);font-weight:700;color:var(--green);font-size:16px;">✅ ${s.ok}</span>
+        <span style="font-family:var(--mono);font-weight:700;color:var(--red);font-size:16px;">❌ ${s.ng}</span>
+        <span style="font-family:var(--mono);color:var(--muted);font-size:14px;margin-left:auto;">${s.eqs.size}개 장비</span>
       </div>`;
     }).join('');
   } else {
@@ -3991,14 +3991,14 @@ function renderInspLog(){
             <div style="font-size:13px;font-weight:600;">${d.eqName}</div>
             ${d.verdict?`<span style="font-family:var(--cond);font-size:11px;font-weight:900;letter-spacing:2px;padding:2px 8px;border-radius:5px;${d.verdict==='OK'?'background:#10b98120;border:1px solid #10b98145;color:var(--green);':'background:#ef444420;border:1px solid #ef444445;color:var(--red);'}">${d.verdict}</span>`:''}
           </div>
-          <div style="font-family:var(--mono);font-size:10px;color:var(--muted);">📅 ${d.date}${d.worker?' | 👤 '+d.worker:''}</div>
-          <div style="font-family:var(--mono);font-size:10px;margin-top:3px;color:${nextColor};">▶ 차기 점검: ${nextDateStr} (${daysToNext>=0?'D-'+daysToNext:'D+'+Math.abs(daysToNext)})</div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--muted);">📅 ${d.date}${d.worker?' | 👤 '+d.worker:''}</div>
+          <div style="font-family:var(--mono);font-size:12px;margin-top:3px;color:${nextColor};">▶ 차기 점검: ${nextDateStr} (${daysToNext>=0?'D-'+daysToNext:'D+'+Math.abs(daysToNext)})</div>
           ${hasChk?`<div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;">
             ${Object.entries(d.chk).map(([cat,vals])=>{
               const ok=Object.values(vals).filter(v=>v==='ok').length;
               const ng=Object.values(vals).filter(v=>v==='ng').length;
               const total=8;
-              return `<span style="font-family:var(--mono);font-size:9px;background:${catColors[cat]}18;border:1px solid ${catColors[cat]}30;border-radius:4px;padding:2px 6px;color:${catColors[cat]};">${catNames[cat]} ${ok} OK${ng>0?' / '+ng+' NG':''}</span>`;
+              return `<span style="font-family:var(--mono);font-size:12px;font-weight:700;background:${catColors[cat]}18;border:1px solid ${catColors[cat]}30;border-radius:4px;padding:3px 8px;color:${catColors[cat]};">${catNames[cat]} ${ok} OK${ng>0?' / '+ng+' NG':''}</span>`;
             }).join('')}
           </div>`:''}
           ${ngCount>0?`<div style="font-size:11px;color:var(--red);margin-top:4px;">⚠ NG: ${d.ngList.join(', ')}</div>`:''}
