@@ -924,13 +924,13 @@ body.light .ac-item.ac-active{background:#f3f4f6;color:var(--amber);}
 .mtbr-year-body.open{display:block;}
 .mtbr-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
 .mtbr-row:last-child{border-bottom:none;}
-.mtbr-mon{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text);width:48px;flex-shrink:0;}
+.mtbr-mon{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text);width:52px;flex-shrink:0;}
 .mtbr-info{flex:1;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
-.mtbr-info span{font-family:var(--mono);font-size:13px;}
-.mtbr-cell{text-align:center;min-width:70px;flex-shrink:0;}
-.mtbr-cell .lbl{font-family:var(--cond);font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:2px;}
-.mtbr-cell .val{font-family:var(--mono);font-size:16px;font-weight:bold;line-height:1.2;}
-.mtbr-cell .sub{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.mtbr-info span{font-family:var(--mono);font-size:14px;}
+.mtbr-cell{text-align:center;min-width:76px;flex-shrink:0;}
+.mtbr-cell .lbl{font-family:var(--cond);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:2px;}
+.mtbr-cell .val{font-family:var(--mono);font-size:19px;font-weight:bold;line-height:1.2;}
+.mtbr-cell .sub{font-family:var(--mono);font-size:12px;color:var(--muted);}
 /* ── 연간 점검 계획표 ── */
 .annual-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px;border:1px solid var(--border);}
 .annual-table{border-collapse:collapse;min-width:600px;width:100%;font-size:12px;}
@@ -3605,10 +3605,13 @@ function renderYearButtons(){
   if(!years.length){el.innerHTML='';return;}
   const fFrom=document.getElementById('sFilterDateFrom')?.value||'';
   const fTo=document.getElementById('sFilterDateTo')?.value||'';
-  el.innerHTML=`<span style="font-size:10px;color:var(--muted);align-self:center;white-space:nowrap;">연도 선택:</span>`+
+  const today=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
+  const currentYear=today.slice(0,4);
+  el.innerHTML=`<span style="font-size:12px;color:var(--muted);align-self:center;white-space:nowrap;">연도 선택:</span>`+
     ['전체',...years].map(y=>{
-      const isActive=y==='전체'?(!fFrom&&!fTo):(fFrom===y+'-01-01'&&fTo===y+'-12-31');
-      return `<button onclick="${y==='전체'?'clearStatsDateFilter()':(`setYearFilter('${y}')`)}" style="padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;border:1.5px solid ${isActive?'var(--blue)':'var(--border2)'};background:${isActive?'var(--blue)':'transparent'};color:${isActive?'#fff':'var(--muted)'};">${y==='전체'?'전체':y+'년'}</button>`;
+      const expectedTo=y===currentYear?today:y+'-12-31';
+      const isActive=y==='전체'?(!fFrom&&!fTo):(fFrom===y+'-01-01'&&fTo===expectedTo);
+      return `<button onclick="${y==='전체'?'clearStatsDateFilter()':(`setYearFilter('${y}')`)}" style="padding:5px 11px;border-radius:6px;font-family:var(--mono);font-size:13px;cursor:pointer;border:1.5px solid ${isActive?'var(--blue)':'var(--border2)'};background:${isActive?'var(--blue)':'transparent'};color:${isActive?'#fff':'var(--muted)'};">${y==='전체'?'전체':y+'년'}</button>`;
     }).join('');
 }
 function setYearFilter(year){
@@ -3757,27 +3760,27 @@ function renderStats(){
       return `<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px;margin-bottom:7px;">
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="flex:1;min-width:0;">
-            <div style="font-size:14px;font-weight:600;color:var(--text);">${eq.name}</div>
-            <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px;">
+            <div style="font-size:16px;font-weight:600;color:var(--text);">${eq.name}</div>
+            <div style="font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:2px;">
               정비 ${totalMaints}건 | 고장 ${failCount}회
             </div>
-            ${failDateStr?`<div style="font-family:var(--mono);font-size:10px;color:var(--red);opacity:.8;margin-top:2px;">🔴 ${failDateStr}</div>`:''}
+            ${failDateStr?`<div style="font-family:var(--mono);font-size:12px;color:var(--red);opacity:.8;margin-top:2px;">🔴 ${failDateStr}</div>`:''}
           </div>
-          <div style="text-align:center;min-width:68px;">
-            <div style="font-family:var(--cond);font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:2px;">MTBF</div>
-            <div style="font-family:var(--mono);font-size:17px;font-weight:bold;color:var(--green);">${mtbf?mtbf.toFixed(0)+'h':'—'}</div>
-            ${mtbfDays?`<div style="font-family:var(--mono);font-size:10px;color:var(--muted);">~${mtbfDays}일</div>`:''}
-            ${mtbfNote?`<div style="font-family:var(--mono);font-size:10px;color:var(--muted);">${mtbfNote}</div>`:''}
+          <div style="text-align:center;min-width:74px;">
+            <div style="font-family:var(--cond);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:2px;">MTBF</div>
+            <div style="font-family:var(--mono);font-size:19px;font-weight:bold;color:var(--green);">${mtbf?mtbf.toFixed(0)+'h':'—'}</div>
+            ${mtbfDays?`<div style="font-family:var(--mono);font-size:12px;color:var(--muted);">~${mtbfDays}일</div>`:''}
+            ${mtbfNote?`<div style="font-family:var(--mono);font-size:12px;color:var(--muted);">${mtbfNote}</div>`:''}
           </div>
-          <div style="text-align:center;min-width:68px;">
-            <div style="font-family:var(--cond);font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:2px;">MTTR</div>
-            <div style="font-family:var(--mono);font-size:17px;font-weight:bold;color:var(--amber);">${mttr?mttr.toFixed(1)+'h':'—'}</div>
-            ${mttr?`<div style="font-family:var(--mono);font-size:10px;color:var(--muted);">~${Math.round(mttr*60)}min</div>`:''}
-            ${mttrNote?`<div style="font-family:var(--mono);font-size:10px;color:var(--red);">${mttrNote}</div>`:''}
+          <div style="text-align:center;min-width:74px;">
+            <div style="font-family:var(--cond);font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:2px;">MTTR</div>
+            <div style="font-family:var(--mono);font-size:19px;font-weight:bold;color:var(--amber);">${mttr?mttr.toFixed(1)+'h':'—'}</div>
+            ${mttr?`<div style="font-family:var(--mono);font-size:12px;color:var(--muted);">~${Math.round(mttr*60)}min</div>`:''}
+            ${mttrNote?`<div style="font-family:var(--mono);font-size:12px;color:var(--red);">${mttrNote}</div>`:''}
           </div>
         </div>
       </div>`}).join('')
-      +(onlyWithRecords&&hiddenCount>0?`<div style="text-align:center;padding:8px 0;font-family:var(--mono);font-size:11px;color:var(--muted);">정비 기록 없는 장비 ${hiddenCount}대 숨김</div>`:'');
+      +(onlyWithRecords&&hiddenCount>0?`<div style="text-align:center;padding:8px 0;font-family:var(--mono);font-size:12px;color:var(--muted);">정비 기록 없는 장비 ${hiddenCount}대 숨김</div>`:'');
   }
 
   renderYearButtons();
